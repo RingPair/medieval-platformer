@@ -13,6 +13,8 @@ const JUMP_VEL = 605;
 const COYOTE = 0.10;       // grace period to jump after leaving a ledge
 const JUMP_BUFFER = 0.12;  // remember a jump press slightly before landing
 const JUMP_CUT = 0.45;     // release-to-shorten variable jump
+const MAX_JUMPS = 2;       // ground jump + one mid-air (double) jump
+const AIR_JUMP_VEL = 560;  // upward velocity of the mid-air jump
 
 export class Player {
   constructor(spawn, game) {
@@ -27,7 +29,7 @@ export class Player {
     this.vx = 0; this.vy = 0;
     this.onGround = false;
     this.facing = 1;
-    this.coyote = 0; this.buffer = 0; this.jumping = false;
+    this.coyote = 0; this.buffer = 0; this.jumping = false; this.jumpsLeft = MAX_JUMPS;
     this.anim = "idle"; this.animTime = 0; this.frame = 0;
     this.sx = 1; this.sy = 1;      // squash/stretch scale
     this.hp = 3; this.maxHp = 3;
@@ -76,14 +78,20 @@ export class Player {
     this.coyote = this.onGround ? COYOTE : Math.max(0, this.coyote - dt);
     this.buffer = input.wasPressed("jump") ? JUMP_BUFFER : Math.max(0, this.buffer - dt);
     this.invuln = Math.max(0, this.invuln - dt);
+    if (this.onGround) this.jumpsLeft = MAX_JUMPS;
+    // walking off a ledge past the coyote window consumes the grounded jump
+    else if (this.coyote <= 0 && this.jumpsLeft === MAX_JUMPS) this.jumpsLeft = MAX_JUMPS - 1;
 
-    // jump (with coyote + buffer)
-    if (this.buffer > 0 && this.coyote > 0) {
-      this.vy = -JUMP_VEL;
+    // jump: grounded/coyote jump, or a mid-air double jump
+    if (this.buffer > 0 && (this.coyote > 0 || this.jumpsLeft > 0)) {
+      const ground = this.coyote > 0;
+      this.vy = ground ? -JUMP_VEL : -AIR_JUMP_VEL;
+      this.jumpsLeft = ground ? MAX_JUMPS - 1 : this.jumpsLeft - 1;
       this.jumping = true; this.buffer = 0; this.coyote = 0;
       this.sx = 0.72; this.sy = 1.32; // stretch up
       this.game.audio.jump();
-      this.game.particles.dust(this.x + this.w / 2, this.y + this.h, this.facing);
+      if (ground) this.game.particles.dust(this.x + this.w / 2, this.y + this.h, this.facing);
+      else this.game.particles.sparkle(this.x + this.w / 2, this.y + this.h, "#cfe8ff"); // air-jump puff
     }
     if (this.jumping && !input.isDown("jump") && this.vy < 0) { this.vy *= JUMP_CUT; this.jumping = false; }
     if (this.vy >= 0) this.jumping = false;

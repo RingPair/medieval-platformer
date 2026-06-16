@@ -82,7 +82,7 @@ export class Game {
       if (e.dead) continue;
       if (!aabb(pb, e.hitbox)) continue;
       const falling = p.vy > 0 && (p.y + p.h) - e.y < 20;
-      if (falling) { e.stomp(); p.vy = -380; p.jumping = true; p.sx = 1.25; p.sy = 0.78; }
+      if (falling) { e.stomp(); p.vy = -380; p.jumping = true; p.jumpsLeft = Math.max(p.jumpsLeft, 1); p.sx = 1.25; p.sy = 0.78; }
       else p.hurt(e.x + e.w / 2);
     }
     // spikes
