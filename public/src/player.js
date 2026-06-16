@@ -127,7 +127,8 @@ export class Player {
     const a = sheet.anims[this.anim];
     const fi = a.f[Math.floor(this.animTime * a.fps) % a.f.length];
     const frame = sheet.frames[fi] || sheet.frames[0];
-    const img = this.facing < 0 ? frame.flipped : frame.normal;
+    // Source walk frames face LEFT, so flip when the hero faces right.
+    const img = this.facing < 0 ? frame.normal : frame.flipped;
 
     // flash when invulnerable
     if (this.invuln > 0 && Math.floor(this.invuln * 20) % 2 === 0) return;
