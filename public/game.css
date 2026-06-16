@@ -44,6 +44,8 @@ canvas#game {
   font-size: clamp(14px, 2.6vmin, 22px);
   text-shadow: 0 2px 0 #00000088, 0 0 8px #00000066;
 }
+/* leave room on the right for the mute button so they don't overlap */
+#hud-coins { margin-right: 40px; }
 .hud-group { display: flex; align-items: center; gap: 6px; }
 #hud-hearts img { width: clamp(20px, 4vmin, 34px); height: auto; image-rendering: pixelated;
   filter: drop-shadow(0 2px 2px #0008); transition: transform .15s; }

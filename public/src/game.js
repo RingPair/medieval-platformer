@@ -140,14 +140,20 @@ export class Game {
   }
 
   _drawParallax(ctx) {
-    const layer = (img, p, bottomScreenY) => {
-      const w = img.width;
+    // Anchor layers to the ground/horizon line and scale them up so they rise
+    // from the ground and fill the backdrop (their faded tops sit off-screen
+    // during normal play, instead of floating in a big empty sky).
+    const horizon = 11 * TILE;                 // main ground surface (world y)
+    const groundScreenY = horizon - this.cam.oy;
+    const layer = (img, p, scale, sink) => {
+      const w = img.width * scale, h = img.height * scale;
       let ox = (this.cam.ox * p) % w; if (ox < 0) ox += w;
-      const y = bottomScreenY - img.height - this.cam.oy * p * 0.5;
-      for (let x = -ox; x < VIEW_W + w; x += w) ctx.drawImage(img, Math.round(x), Math.round(y));
+      const y = groundScreenY + sink - h;      // bottom tucked just behind the ground
+      for (let x = -ox; x < VIEW_W + w; x += w)
+        ctx.drawImage(img, Math.round(x), Math.round(y), Math.ceil(w), Math.ceil(h));
     };
-    layer(this.assets.images.hillsFar, 0.25, VIEW_H * 0.92);
-    layer(this.assets.images.hillsNear, 0.45, VIEW_H * 1.02);
+    layer(this.assets.images.hillsFar, 0.30, 1.28, 8);
+    layer(this.assets.images.hillsNear, 0.50, 1.06, 16);
   }
 
   _drawTiles(ctx) {
