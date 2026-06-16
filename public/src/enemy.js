@@ -52,10 +52,12 @@ export class Enemy {
     const img = this.dir > 0 ? frame.flipped : frame.normal;
     const cx = this.x + this.w / 2 - cam.ox;
     const footY = this.y + this.h - cam.oy;
-    const dh = sheet.fh * (this.dead ? this.squish : 1);
+    const scaleY = this.dead ? this.squish : 1;
+    const dh = sheet.fh * scaleY;
     const dw = sheet.fw * (this.dead ? 1 + (1 - this.squish) * 0.4 : 1);
+    const foot = (sheet.foot || 0) * scaleY; // plant the feet on the ground
     ctx.globalAlpha = this.dead ? Math.max(0, 1 - this.deadT * 1.5) : 1;
-    ctx.drawImage(img, Math.round(cx - dw / 2), Math.round(footY - dh), Math.round(dw), Math.round(dh));
+    ctx.drawImage(img, Math.round(cx - dw / 2), Math.round(footY - dh + foot), Math.round(dw), Math.round(dh));
     ctx.globalAlpha = 1;
   }
 }

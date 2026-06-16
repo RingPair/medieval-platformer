@@ -145,6 +145,7 @@ export class Player {
     const footY = this.y + this.h - cam.oy;
     const dw = sheet.fw * this.sx;
     const dh = sheet.fh * this.sy;
-    ctx.drawImage(img, Math.round(cx - dw / 2), Math.round(footY - dh + this.bob), Math.round(dw), Math.round(dh));
+    const foot = (sheet.foot || 0) * this.sy; // drop the empty rows below the feet onto the ground
+    ctx.drawImage(img, Math.round(cx - dw / 2), Math.round(footY - dh + foot + this.bob), Math.round(dw), Math.round(dh));
   }
 }

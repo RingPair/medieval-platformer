@@ -5,13 +5,15 @@ export const VIEW_W = 480;       // internal render resolution (scaled up, pixel
 export const VIEW_H = 270;
 
 // Animated, frame-sliced sprite sheets (horizontal strips of fw×fh frames).
+// `foot` = transparent rows below the feet in each frame; subtracted at draw time
+// so sprites stand ON the ground instead of floating above it.
 export const SHEETS = {
-  hero:   { src: "assets/hero/knight.png", fw: 48, fh: 48,
+  hero:   { src: "assets/hero/knight.png", fw: 48, fh: 48, foot: 5,
             anims: { idle: { f: [1], fps: 1 }, run: { f: [0, 1, 2, 3], fps: 11 },
                      jump: { f: [0], fps: 1 }, fall: { f: [2], fps: 1 } } },
-  goblin: { src: "assets/enemy/goblin.png", fw: 48, fh: 48,
+  goblin: { src: "assets/enemy/goblin.png", fw: 48, fh: 48, foot: 5,
             anims: { walk: { f: [0, 1, 2, 3], fps: 8 } } },
-  slime:  { src: "assets/enemy/slime.png", fw: 48, fh: 48,
+  slime:  { src: "assets/enemy/slime.png", fw: 48, fh: 48, foot: 5,
             anims: { walk: { f: [0, 1, 2, 3], fps: 6 } } },
 };
 
