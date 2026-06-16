@@ -2,7 +2,7 @@
 // balance than aligned ASCII). Produces a collision grid + entity list.
 import { TILE } from "./assets.js";
 
-const ROWS = 15;
+const ROWS = 14;
 
 // Ground surface spans: [fromCol, toCol, topRow] (inclusive). Solid from topRow..bottom.
 // Gaps between spans are BOTTOMLESS PITS. A lower topRow = higher ground.
@@ -74,6 +74,17 @@ export class Level {
     // grass cap = ground tile (type 1) with nothing solid directly above
     this.cap = this.tiles.map((tr, r) =>
       tr.map((t, c) => (t === 1 && !(r > 0 && this.tiles[r - 1][c]) ? 1 : 0))
+    );
+
+    // depth = how many solid tiles sit directly above this one (0 = surface).
+    // Used to darken deeper soil so the underground reads as a cross-section.
+    this.depth = this.tiles.map((tr, r) =>
+      tr.map((t, c) => {
+        if (!t) return 0;
+        let d = 0, rr = r - 1;
+        while (rr >= 0 && this.tiles[rr][c]) { d++; rr--; }
+        return d;
+      })
     );
 
     const cx = (c) => c * TILE + TILE / 2;

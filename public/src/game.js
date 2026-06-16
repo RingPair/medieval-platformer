@@ -167,7 +167,14 @@ export class Game {
         const t = L.tiles[r][c];
         if (!t) continue;
         const img = t === 2 ? images.stone : L.cap[r][c] ? images.grass : images.dirt;
-        ctx.drawImage(img, Math.round(c * TILE - cam.ox), Math.round(r * TILE - cam.oy), TILE, TILE);
+        const sx = Math.round(c * TILE - cam.ox), sy = Math.round(r * TILE - cam.oy);
+        ctx.drawImage(img, sx, sy, TILE, TILE);
+        // shade deeper soil so the underground recedes into shadow
+        const d = L.depth[r][c];
+        if (d > 0) {
+          ctx.fillStyle = `rgba(18,10,6,${Math.min(0.62, d * 0.16)})`;
+          ctx.fillRect(sx, sy, TILE, TILE);
+        }
       }
     }
   }
