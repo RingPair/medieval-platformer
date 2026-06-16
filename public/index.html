@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#1b1430" />
+  <title>Knight's Quest — a medieval platformer</title>
+  <meta name="description" content="A pretty little medieval platformer. All art generated with AI (Replicate / Retro Diffusion). Runs on Cloudflare Workers." />
+  <link rel="icon" href="assets/ui/favicon.png" />
+  <link rel="stylesheet" href="game.css" />
+</head>
+<body>
+  <div id="frame">
+    <div id="stage">
+      <canvas id="game" width="480" height="270"></canvas>
+
+      <!-- HUD -->
+      <div id="hud" class="hidden">
+        <div id="hud-hearts" class="hud-group"></div>
+        <div id="hud-coins" class="hud-group"><img id="coin-icon" alt="coins" /><span id="coin-count">0</span></div>
+      </div>
+
+      <!-- Overlays -->
+      <div id="overlay" class="overlay">
+        <div id="loading" class="panel">
+          <h1 class="title">Knight's Quest</h1>
+          <p class="subtitle">forging the realm…</p>
+          <div class="bar"><div id="bar-fill"></div></div>
+          <p id="load-label" class="tiny"></p>
+        </div>
+
+        <div id="title-screen" class="panel hidden">
+          <h1 class="title">Knight's Quest</h1>
+          <p class="subtitle">Collect the coins. Reach the castle. Mind the goblins.</p>
+          <button id="play-btn" class="btn">▶ Play</button>
+          <p class="tiny">Move: ◀ ▶ / A D &nbsp;·&nbsp; Jump: ▲ / W / Space &nbsp;·&nbsp; Restart: R</p>
+          <p class="credit">All art generated with AI · Retro Diffusion on Replicate</p>
+        </div>
+
+        <div id="win-screen" class="panel hidden">
+          <h1 class="title win">Victory!</h1>
+          <p class="subtitle" id="win-stats"></p>
+          <button id="again-btn" class="btn">↻ Play again</button>
+        </div>
+
+        <div id="lose-screen" class="panel hidden">
+          <h1 class="title lose">You fell…</h1>
+          <p class="subtitle">The realm still needs a hero.</p>
+          <button id="retry-btn" class="btn">↻ Try again</button>
+        </div>
+      </div>
+
+      <!-- Touch controls -->
+      <div id="touch" class="hidden">
+        <div class="dpad">
+          <button id="btn-left" class="tbtn" aria-label="left">◀</button>
+          <button id="btn-right" class="tbtn" aria-label="right">▶</button>
+        </div>
+        <button id="btn-jump" class="tbtn jump" aria-label="jump">▲</button>
+      </div>
+
+      <button id="mute-btn" class="mute" aria-label="mute">♪</button>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

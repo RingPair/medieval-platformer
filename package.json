@@ -1,0 +1,16 @@
+{
+  "name": "medieval-platformer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A pretty 2D medieval platformer with AI-generated pixel-art assets, deployed on Cloudflare Workers.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "gen": "node --env-file=.env tools/gen-assets.mjs",
+    "slice": "node tools/slice.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.100.0"
+  }
+}
