@@ -6,11 +6,24 @@ right-facing row, resizes seamless tiles to the grid size, and trims single spri
 to their opaque bounding box. Re-runnable; safe to re-run after regenerating sources.
 """
 import os
+import numpy as np
 from PIL import Image
 
 E = "assets/raw/explore"
 OUT = "public/assets"
 TILE = 32
+
+
+def fade_top(im, fade_px):
+    """Ramp the top `fade_px` rows of alpha to 0 so a parallax layer dissolves
+    into the sky instead of showing a hard horizontal cut where the image ends."""
+    im = im.convert("RGBA")
+    a = np.array(im).astype(np.float32)
+    ramp = np.ones(im.height, dtype=np.float32)
+    for y in range(min(fade_px, im.height)):
+        ramp[y] = (y / fade_px) ** 0.8
+    a[:, :, 3] *= ramp[:, None]
+    return Image.fromarray(np.clip(a, 0, 255).astype("uint8"), "RGBA")
 
 
 def save(im, path):
@@ -72,9 +85,9 @@ single(f"{E}/deco/spikes.png", "spikes", "deco")
 single(f"{E}/deco/torch.png", "torch", "deco")
 single(f"{E}/bg2/castle-far.png", "castle", "deco")
 
-print("BACKGROUND PARALLAX LAYERS:")
-save(Image.open(f"{E}/bg2/hills-sil.png").convert("RGBA"), f"{OUT}/bg/hills-far.png")
-save(Image.open(f"{E}/bg2/hills-near.png").convert("RGBA"), f"{OUT}/bg/hills-near.png")
+print("BACKGROUND PARALLAX LAYERS (top edge faded into sky):")
+save(fade_top(Image.open(f"{E}/bg2/hills-sil.png"), 42), f"{OUT}/bg/hills-far.png")
+save(fade_top(Image.open(f"{E}/bg2/hills-near.png"), 34), f"{OUT}/bg/hills-near.png")
 
 print("UI:")
 fav = Image.open(f"{E}/props2/coin-a.png").convert("RGBA").resize((32, 32), Image.LANCZOS)
